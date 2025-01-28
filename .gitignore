@@ -1,0 +1,8 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.env
+data/justice_40/usa/usa.dbf
+data/justice_40/usa.zip
+data/justice_40/usa/usa.shp
