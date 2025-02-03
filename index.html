@@ -277,7 +277,10 @@
 
 
             popup.setLngLat(e.lngLat)
-                .setHTML(`<strong>CSO outfall coordinates:</strong><br>${LAT}, ${LON}`)
+            .setHTML(`<strong>CSO outfall coordinates:</strong><br>
+  <a href="https://www.google.com/maps?q=${LAT},${LON}" target="_blank">
+    ${LAT}, ${LON}
+  </a>`)
                 .addTo(map);
 
             map.getCanvas().style.cursor = "pointer";
