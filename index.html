@@ -2,7 +2,6 @@
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.css" />
 <script src="https://unpkg.com/maplibre-gl@4.5.0/dist/maplibre-gl.js"></script>
 <script type="text/javascript" src="https://pym.nprapps.org/pym.v1.min.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@2.3.0/dist/maplibre-gl.css" />
 
 <!-- Fonts -->
 <link rel="stylesheet" href="https://use.typekit.net/rdn8fde.css" />
@@ -31,7 +30,6 @@
     #container {
         display: flex;
         flex-direction: column;
-        height: 100vh;
     }
 
     #header {
@@ -90,11 +88,10 @@
     }
 
     #map {
-        flex-grow: 1;
-        height: 600px;
-        max-width: 980px;
-        margin-bottom: 12px;
-    }
+  flex-grow: 1;
+  height: 550px;
+  max-width: 980px;
+}
 
     button.maplibregl-ctrl-compass {
         display: none !important;
@@ -172,13 +169,10 @@
     <div id="map"></div>
     <div class="note"></div>
     <div class="source">
-        Map: Taylor Johnston / CBS News •
-        Source:
-        <a href="XXX" target="_blank" id="source"><a href="https://www.epa.gov/npdes/combined-sewer-overflows-csos"
-                target="_blank">U.S. Environmental Protection Agency</a>, <a
-                href="https://bidenwhitehouse.archives.gov/environmentaljustice/justice40/" target="_blank">Justice40
-                Initiative</a></a>
-    </div>
+        Map: Taylor Johnston / CBS News • Source:
+        <a href="https://www.epa.gov/npdes/combined-sewer-overflows-csos" target="_blank">U.S. Environmental Protection Agency</a>,
+        <a href="https://bidenwhitehouse.archives.gov/environmentaljustice/justice40/" target="_blank">Justice40 Initiative</a>
+      </div>
 </div>
 
 <script src="https://pym.nprapps.org/pym.v1.min.js"></script>
