@@ -18,16 +18,10 @@
         margin: 0 !important;
     }
 
-    a {
-        text-decoration: underline;
-        text-decoration-color: #A5091E;
-        color: #858585;
-    }
-
-    a:hover {
-        cursor: pointer;
-        color: #A5091E
-    }
+ 
+  a {
+    color: inherit;
+  }
 
     a#source {
         color: #858585;
@@ -86,7 +80,7 @@
     }
 
     .active {
-        background-color: #5ca8ad;
+        background-color: #70aae8;
         /* margin-left: 15px; */
     }
 
@@ -97,7 +91,7 @@
 
     #map {
         flex-grow: 1;
-        max-height: 700px;
+        max-height: 600px;
         max-width: 980px;
         margin-bottom: 12px;
     }
@@ -153,16 +147,23 @@
     }
 
     .source {
-        font-family: "proxima-nova", sans-serif;
-        color: rgb(130, 130, 130);
-        font-size: 14px;
-    }
+    font-family: "proxima-nova", sans-serif;
+    color: 828282;
+    font-size: 14px;
+  }
+
+  a#source {
+    color: #828282;
+    text-decoration: underline;
+  }
 </style>
 
 <div id="container">
     <div id="header">
         <div class="title">CSO outfall locations in the U.S.</div>
-        <p class="description">The map below shows the locations of CSO outfalls in the U.S. If they are in areas shaded in blue, they are in a disadvantaged Census Tract. Hover or click on a CSO outfall location to get the coordinates.</p>
+        <p class="description">The map below shows the locations of CSO outfalls in the U.S. If they are in areas shaded
+            in blue, they are in a disadvantaged Census Tract. Hover or click on a CSO outfall location to get the
+            coordinates.</p>
         <div class="legend">
             <div class="active"></div>
             <span>Disadvantaged</span>
@@ -170,25 +171,53 @@
     </div>
     <div id="map"></div>
     <div class="note"></div>
-    <!-- <div class="source">
-    Map: Taylor Johnston and John Kelly / CBS News •
-    Source:
-    <a href="https://www.fire.ca.gov/" target="_blank" id="source">Cal Fire</a>
-  </div> -->
+    <div class="source">
+        Map: Taylor Johnston / CBS News •
+        Source:
+        <a href="XXX" target="_blank" id="source"><a href="https://www.epa.gov/npdes/combined-sewer-overflows-csos" target="_blank">U.S. Environmental Protection Agency</a>, <a href="https://bidenwhitehouse.archives.gov/environmentaljustice/justice40/" target="_blank">Justice40 Initiative</a></a>
+    </div>
 </div>
 
 <script>
     const map = new maplibregl.Map({
         container: "map",
-        style: "https://raw.githubusercontent.com/go2garret/maps/main/src/assets/json/openStreetMap.json",
-        center: [-98, 36],
-        zoom: 3.7,
+        style: {
+            version: 8,
+            sources: {},
+            layers: [],
+            glyphs: "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+        },
+        center: [-96.01, 38.28],
+        zoom: 3.5,
+        renderWorldCopies: false,
+        attributionControl: false
     });
 
     map.scrollZoom.disable();
     map.addControl(new maplibregl.NavigationControl(), "top-left");
 
+
     map.on("load", () => {
+        map.addSource("background", {
+            type: "geojson",
+            data: "data/states.geojson",
+            generateId: true,
+        });
+
+
+        
+
+        map.addLayer({
+            id: "background-fill",
+            type: "fill",
+            source: "background",
+            paint: {
+                "fill-color": "white",
+            },
+        });
+
+
+
         map.addSource("points", {
             type: "geojson",
             data: "data/cso-locations.geojson",
@@ -200,9 +229,10 @@
             type: "circle",
             source: "points",
             paint: {
-                "circle-color": "black",
                 "circle-radius": 3,
-                "circle-opacity": 0.8,
+                "circle-color": "rgba(0, 0, 0, 0.8)",
+                "circle-stroke-color": "white",
+                "circle-stroke-width": .5
             },
         });
 
@@ -219,8 +249,9 @@
             type: "fill",
             source: "shapefile",
             paint: {
-                "fill-color": "#5ca8ad",
-                "fill-opacity": 0.5,
+                "fill-color": "#70aae8",
+                "fill-opacity": 0.4,
+
             },
         });
 
@@ -230,8 +261,18 @@
             type: "line",
             source: "shapefile",
             paint: {
-                "line-color": "#347f85",
-                "line-width": 1,
+                "line-color": "#70aae8",
+                "line-width": .2,
+            },
+        });
+
+        map.addLayer({
+            id: "background-line",
+            type: "line",
+            source: "background",
+            paint: {
+                "line-color": "#bdbdbd",
+                "line-width": 1.2,
             },
         });
 
@@ -246,17 +287,17 @@
 
     const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false });
 
-map.on("click", "points-layer", (e) => {
-    if (e.features.length > 0) {
-        const feature = e.features[0];
-        const LAT = feature.properties.PF_LAT;
-        const LON = feature.properties.PF_LON;
+    map.on("click", "points-layer", (e) => {
+        if (e.features.length > 0) {
+            const feature = e.features[0];
+            const LAT = feature.properties.PF_LAT;
+            const LON = feature.properties.PF_LON;
 
-        // Create content with a close button
-        const popupContent = document.createElement("div");
-        popupContent.style.fontSize = "14px";
-        popupContent.style.position = "relative";
-        popupContent.innerHTML = `
+            // Create content with a close button
+            const popupContent = document.createElement("div");
+            popupContent.style.fontSize = "14px";
+            popupContent.style.position = "relative";
+            popupContent.innerHTML = `
             <button id="close-btn" style="
                 position: absolute;
                 top: -20px;
@@ -273,21 +314,21 @@ map.on("click", "points-layer", (e) => {
             </a>
         `;
 
-        // Attach close button event
-        popupContent.querySelector("#close-btn").onclick = () => popup.remove();
+            // Attach close button event
+            popupContent.querySelector("#close-btn").onclick = () => popup.remove();
 
-        popup.setLngLat(e.lngLat).setDOMContent(popupContent).addTo(map);
-    }
-});
+            popup.setLngLat(e.lngLat).setDOMContent(popupContent).addTo(map);
+        }
+    });
 
-// Change cursor to pointer when hovering over points
-map.on("mouseenter", "points-layer", () => {
-    map.getCanvas().style.cursor = "pointer";
-});
+    // Change cursor to pointer when hovering over points
+    map.on("mouseenter", "points-layer", () => {
+        map.getCanvas().style.cursor = "pointer";
+    });
 
-map.on("mouseleave", "points-layer", () => {
-    map.getCanvas().style.cursor = "";
-});
+    map.on("mouseleave", "points-layer", () => {
+        map.getCanvas().style.cursor = "";
+    });
     document.addEventListener("DOMContentLoaded", function () {
         var pymChild = new pym.Child();
         pymChild.sendHeight();

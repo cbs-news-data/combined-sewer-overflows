@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSO Outfall Locations</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  body {
+    font-family: "proxima-nova", sans-serif;
+    margin: 0;
+  }
+  svg {
+    display: block;
+    margin: auto;
+    background-color: white;
+  }
+  .state {
+    fill: white;
+    stroke: #bdbdbd;
+    stroke-width: 1.2;
+  }
+  .disadvantaged {
+    fill: #5ca8ad;
+    fill-opacity: 0.5;
+    stroke: #347f85;
+    stroke-width: 1;
+  }
+  .point {
+    fill: black;
+    fill-opacity: 0.8;
+    stroke: none;
+    r: 3;
+  }
+  .tooltip {
+    position: absolute;
+    background-color: white;
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    pointer-events: none;
+  }
+</style>
+<body>
+<div id="map"></div>
+<div class="tooltip" style="display:none;"></div>
+<script>
+const width = 980;
+const height = 600;
+
+const svg = d3.select("#map")
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height);
+
+const projection = d3.geoAlbersUsa().scale(1200).translate([width / 2, height / 2]);
+const path = d3.geoPath().projection(projection);
+
+const tooltip = d3.select(".tooltip");
+
+Promise.all([
+  d3.json("data/states.geojson"),
+  d3.json("data/NEW_J40.geojson"),
+  d3.json("data/cso-locations.geojson")
+]).then(([states, shapefile, points]) => {
+  // Draw states
+  svg.selectAll(".state")
+    .data(states.features)
+    .enter().append("path")
+    .attr("class", "state")
+    .attr("d", path);
+
+  // Draw disadvantaged tracts
+  svg.selectAll(".disadvantaged")
+    .data(shapefile.features)
+    .enter().append("path")
+    .attr("class", "disadvantaged")
+    .attr("d", path);
+
+  // Draw points
+  svg.selectAll(".point")
+    .data(points.features)
+    .enter().append("circle")
+    .attr("class", "point")
+    .attr("cx", d => projection([d.properties.PF_LON, d.properties.PF_LAT])[0])
+    .attr("cy", d => projection([d.properties.PF_LON, d.properties.PF_LAT])[1])
+    .attr("r", 3)
+    .on("mouseenter", function (event, d) {
+      tooltip.style("display", "block")
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 20) + "px")
+        .html(`
+          <strong>CSO outfall coordinates:</strong><br>
+          <a href="https://www.google.com/maps?q=${d.properties.PF_LAT},${d.properties.PF_LON}" target="_blank">
+            ${d.properties.PF_LAT}, ${d.properties.PF_LON}
+          </a>
+        `);
+    })
+    .on("mouseleave", () => tooltip.style("display", "none"));
+});
+</script>
