@@ -181,6 +181,7 @@
     </div>
 </div>
 
+<script src="https://pym.nprapps.org/pym.v1.min.js"></script>
 <script>
     var pymChild = new pym.Child();
 
@@ -201,22 +202,14 @@
     map.scrollZoom.disable();
     map.addControl(new maplibregl.NavigationControl(), "top-left");
 
-
     map.on("load", () => {
-
-        map.once('idle', () => {
-            pymChild.sendHeight();
-        });
-
+        // Add your sources and layers here...
 
         map.addSource("background", {
             type: "geojson",
             data: "data/states.geojson",
             generateId: true,
         });
-
-
-
 
         map.addLayer({
             id: "background-fill",
@@ -226,8 +219,6 @@
                 "fill-color": "white",
             },
         });
-
-
 
         map.addSource("points", {
             type: "geojson",
@@ -243,18 +234,16 @@
                 "circle-radius": 3,
                 "circle-color": "rgba(0, 0, 0, 0.8)",
                 "circle-stroke-color": "white",
-                "circle-stroke-width": .5
+                "circle-stroke-width": 0.5
             },
         });
 
-        // Add shapefile source
         map.addSource("shapefile", {
             type: "geojson",
             data: "data/NEW_J40.geojson",
             generateId: true,
         });
 
-        // Add shapefile fill layer
         map.addLayer({
             id: "shapefile-layer",
             type: "fill",
@@ -262,18 +251,16 @@
             paint: {
                 "fill-color": "#70aae8",
                 "fill-opacity": 0.4,
-
             },
         });
 
-        // Add shapefile outline layer
         map.addLayer({
             id: "shapefile-layer-outline",
             type: "line",
             source: "shapefile",
             paint: {
                 "line-color": "#70aae8",
-                "line-width": .2,
+                "line-width": 0.2,
             },
         });
 
@@ -287,14 +274,14 @@
             },
         });
 
-        // Move points above shapefile
         map.moveLayer("points-layer");
+
+        // Send height once the map finishes rendering
+        map.once('idle', () => {
+            pymChild.sendHeight();
+            setTimeout(() => pymChild.sendHeight(), 500); // Extra height check
+        });
     });
 
-
-
-    let hoveredFeatureId = null;
-
     window.addEventListener('resize', () => pymChild.sendHeight());
-
 </script>
