@@ -18,10 +18,10 @@
         margin: 0 !important;
     }
 
- 
-  a {
-    color: inherit;
-  }
+
+    a {
+        color: inherit;
+    }
 
     a#source {
         color: #858585;
@@ -147,15 +147,15 @@
     }
 
     .source {
-    font-family: "proxima-nova", sans-serif;
-    color: 828282;
-    font-size: 14px;
-  }
+        font-family: "proxima-nova", sans-serif;
+        color: 828282;
+        font-size: 14px;
+    }
 
-  a#source {
-    color: #828282;
-    text-decoration: underline;
-  }
+    a#source {
+        color: #828282;
+        text-decoration: underline;
+    }
 </style>
 
 <div id="container">
@@ -174,7 +174,10 @@
     <div class="source">
         Map: Taylor Johnston / CBS News •
         Source:
-        <a href="XXX" target="_blank" id="source"><a href="https://www.epa.gov/npdes/combined-sewer-overflows-csos" target="_blank">U.S. Environmental Protection Agency</a>, <a href="https://bidenwhitehouse.archives.gov/environmentaljustice/justice40/" target="_blank">Justice40 Initiative</a></a>
+        <a href="XXX" target="_blank" id="source"><a href="https://www.epa.gov/npdes/combined-sewer-overflows-csos"
+                target="_blank">U.S. Environmental Protection Agency</a>, <a
+                href="https://bidenwhitehouse.archives.gov/environmentaljustice/justice40/" target="_blank">Justice40
+                Initiative</a></a>
     </div>
 </div>
 
@@ -200,6 +203,12 @@
 
 
     map.on("load", () => {
+
+        map.once('idle', () => {
+            pymChild.sendHeight();
+        });
+
+
         map.addSource("background", {
             type: "geojson",
             data: "data/states.geojson",
@@ -207,7 +216,7 @@
         });
 
 
-        
+
 
         map.addLayer({
             id: "background-fill",
