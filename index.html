@@ -286,53 +286,6 @@
 
     let hoveredFeatureId = null;
 
+    window.addEventListener('resize', () => pymChild.sendHeight());
 
-    // const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false });
-
-    // map.on("click", "points-layer", (e) => {
-    //     if (e.features.length > 0) {
-    //         const feature = e.features[0];
-    //         const LAT = feature.properties.PF_LAT;
-    //         const LON = feature.properties.PF_LON;
-
-    //         // Create content with a close button
-    //         const popupContent = document.createElement("div");
-    //         popupContent.style.fontSize = "14px";
-    //         popupContent.style.position = "relative";
-    //         popupContent.innerHTML = `
-    //         <button id="close-btn" style="
-    //             position: absolute;
-    //             top: -20px;
-    //             right: 5px;
-    //             padding: 2px 5px;
-    //             font-size: 12px;
-    //             border: none;
-    //             color: black;
-    //             cursor: pointer;
-    //         "></button>
-    //         <strong>CSO outfall coordinates:</strong><br>
-    //         <a href="https://www.google.com/maps?q=${LAT},${LON}" target="_blank">
-    //             ${LAT}, ${LON}
-    //         </a>
-    //     `;
-
-    //         // Attach close button event
-    //         popupContent.querySelector("#close-btn").onclick = () => popup.remove();
-
-    //         popup.setLngLat(e.lngLat).setDOMContent(popupContent).addTo(map);
-    //     }
-    // });
-
-    // // Change cursor to pointer when hovering over points
-    // map.on("mouseenter", "points-layer", () => {
-    //     map.getCanvas().style.cursor = "pointer";
-    // });
-
-    // map.on("mouseleave", "points-layer", () => {
-    //     map.getCanvas().style.cursor = "";
-    // });
-    document.addEventListener("DOMContentLoaded", function () {
-        var pymChild = new pym.Child();
-        pymChild.sendHeight();
-    });
 </script>
